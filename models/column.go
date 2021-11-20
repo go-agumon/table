@@ -1,7 +1,7 @@
 package models
 
 import (
-	"table/util"
+	"github.com/go-agumon/table/util"
 )
 
 // 列

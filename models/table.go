@@ -2,7 +2,8 @@ package models
 
 import (
 	"fmt"
-	"table/util"
+
+	"github.com/go-agumon/table/util"
 )
 
 // 表格

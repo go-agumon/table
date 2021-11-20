@@ -1,1 +1,1 @@
-module "table"
+module "github.com/go-agumon/table"

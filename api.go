@@ -2,7 +2,8 @@ package table
 
 import (
 	"fmt"
-	"table/models"
+
+	"github.com/go-agumon/table/models"
 )
 
 // 常量
