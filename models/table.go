@@ -260,9 +260,10 @@ func (element *Table) ToStringSlice() []string {
 	}
 	tableSlice = append(tableSlice, element.rowsToStringSlice([]map[string]*Row{headerRow}, columnMaxLength)...)
 
-	// 添加分隔行
-	tableSlice = append(tableSlice, element.rowsToStringSlice([]map[string]*Row{splitRow}, columnMaxLength)...)
-
+	if element.border {
+		// 添加分隔行
+		tableSlice = append(tableSlice, element.rowsToStringSlice([]map[string]*Row{splitRow}, columnMaxLength)...)
+	}
 	// 打印数据行
 	if !element.Empty() {
 		tableSlice = append(tableSlice, element.rowsToStringSlice(element.rows, columnMaxLength)...)
