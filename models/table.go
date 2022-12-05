@@ -1,16 +1,19 @@
 package models
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/go-agumon/table/util"
 )
 
 // 表格
 type Table struct {
-	header *Header           // 表头
-	rows   []map[string]*Row // 行
-	border bool              // 边框
+	header   *Header           // 表头
+	rows     []map[string]*Row // 行
+	border   bool              // 边框
+	sequence bool              // 序列
 }
 
 // 创建表格
@@ -39,13 +42,23 @@ func (element *Table) Empty() bool {
 }
 
 // 启用边框
-func (element *Table) OpenBorder() {
+func (element *Table) EnableBorder() {
 	element.border = true
 }
 
 // 禁用边框
-func (element *Table) CloseBorder() {
+func (element *Table) DisableBorder() {
 	element.border = false
+}
+
+// 启用序列
+func (element *Table) EnableSequence() {
+	element.sequence = true
+}
+
+// 禁用序列
+func (element *Table) DisableSequence() {
+	element.sequence = false
 }
 
 // 设置指定列的排列方式
@@ -89,6 +102,26 @@ func (element *Table) AddColumns(columns ...string) error {
 			row[column] = CreateEmptyRow()
 		}
 	}
+	return nil
+}
+
+// 插入列
+func (element *Table) InsertColumn(column string, values []string, index int) error {
+	// 向表头插入列
+	if err := element.header.Insert(column, index); err != nil {
+		return err
+	}
+
+	// 需要保证值的长度与行的长度一致
+	if len(values) != len(element.rows) {
+		return errors.New("the given values does not match the length of the rows")
+	}
+
+	// 向每一列插入数据
+	for i, item := range element.rows {
+		item[column] = CreateRow(values[i])
+	}
+
 	return nil
 }
 
@@ -152,24 +185,24 @@ func (element *Table) AddRow(row interface{}) error {
 
 // 添加行 - 切片
 func (element *Table) addRowFromSlice(row []string) error {
+	// 获取长度
 	rowLength := len(row)
 	if rowLength != element.header.Len() {
 		return fmt.Errorf("the length of row(%d) does not equal the columns(%d)", rowLength, element.header.Len())
 	}
 
-	rowMap := make(map[string]string, 0)
-	for i := 0; i < rowLength; i++ {
-		if row[i] == Default {
-			// 设置为默认值
-			rowMap[element.header.columns[i].String()] = element.header.columns[i].Default()
-		} else {
-			rowMap[element.header.columns[i].String()] = row[i]
-		}
-	}
-
+	// 将列名与列进行一一对应
 	item := make(map[string]*Row)
-	for k, v := range rowMap {
-		item[k] = CreateRow(v)
+	for i := 0; i < rowLength; i++ {
+		// 列值
+		var value = ""
+		// 判断列值是否需要设置为默认值
+		if row[i] == Default {
+			value = element.header.columns[i].Default()
+		} else {
+			value = row[i]
+		}
+		item[element.header.columns[i].String()] = CreateRow(value)
 	}
 
 	element.rows = append(element.rows, item)
@@ -278,6 +311,15 @@ func (element *Table) ToStringSlice() []string {
 }
 
 func (element *Table) Print() {
+	// 判断表格是否开启序列
+	if element.sequence {
+		values := make([]string, len(element.rows))
+		for i := 1; i <= len(element.rows); i++ {
+			values = append(values, strconv.Itoa(i))
+		}
+		_ = element.InsertColumn("序列", values, 0)
+	}
+
 	tableSlice := element.ToStringSlice()
 	for _, line := range tableSlice {
 		fmt.Println(line)

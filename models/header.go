@@ -41,12 +41,29 @@ func (element *Header) Clear() {
 
 // 添加列
 func (element *Header) Add(name string) error {
+	// 判断列是否存在
 	if element.Exist(name) {
 		return fmt.Errorf("column [%s] has exist", name)
 	}
 
 	column := CreateColumn(name)
 	element.columns = append(element.columns, column)
+	return nil
+}
+
+// 插入列
+func (element *Header) Insert(name string, index int) error {
+	// 判断列是否存在
+	if element.Exist(name) {
+		return fmt.Errorf("column [%s] has exist", name)
+	}
+
+	// 扩容
+	element.columns = append(element.columns, &Column{})
+	// 拷贝数据
+	copy(element.columns[index+1:], element.columns[index:])
+	// 插入
+	element.columns[index] = CreateColumn(name)
 	return nil
 }
 
