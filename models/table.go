@@ -114,7 +114,6 @@ func (element *Table) InsertColumn(column string, values []string, index int) er
 	}
 
 	// 需要保证值的长度与行的长度一致
-	fmt.Println(len(values), len(element.rows))
 	if len(values) != len(element.rows) {
 		return errors.New("the given values does not match the length of the rows")
 	}
@@ -123,7 +122,6 @@ func (element *Table) InsertColumn(column string, values []string, index int) er
 	for i, _ := range element.rows {
 		element.rows[i][column] = CreateRow(values[i])
 	}
-	fmt.Println(element.rows)
 
 	return nil
 }
@@ -316,7 +314,7 @@ func (element *Table) ToStringSlice() []string {
 func (element *Table) Print() {
 	// 判断表格是否开启序列
 	if element.sequence {
-		values := make([]string, len(element.rows))
+		values := make([]string, 0, len(element.rows))
 		for i := 1; i <= len(element.rows); i++ {
 			values = append(values, strconv.Itoa(i))
 		}
@@ -325,8 +323,6 @@ func (element *Table) Print() {
 			os.Exit(-1)
 		}
 	}
-
-	fmt.Println(element.rows)
 
 	tableSlice := element.ToStringSlice()
 	for _, line := range tableSlice {

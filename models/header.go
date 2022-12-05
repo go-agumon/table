@@ -64,7 +64,6 @@ func (element *Header) Insert(name string, index int) error {
 	copy(element.columns[index+1:], element.columns[index:])
 	// 插入
 	element.columns[index] = CreateColumn(name)
-	fmt.Println(element.columns)
 	return nil
 }
 
