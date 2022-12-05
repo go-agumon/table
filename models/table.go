@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/go-agumon/table/util"
@@ -120,8 +121,8 @@ func (element *Table) InsertColumn(column string, values []string, index int) er
 	// 向每一列插入数据
 	for i, _ := range element.rows {
 		element.rows[i][column] = CreateRow(values[i])
-		fmt.Println(i)
 	}
+	fmt.Println(element.rows)
 
 	return nil
 }
@@ -318,7 +319,10 @@ func (element *Table) Print() {
 		for i := 1; i <= len(element.rows); i++ {
 			values = append(values, strconv.Itoa(i))
 		}
-		_ = element.InsertColumn("序列", values, 0)
+		if err := element.InsertColumn("序列", values, 0); err != nil {
+			fmt.Printf("unable to insert values to table, err: %v", err)
+			os.Exit(-1)
+		}
 	}
 
 	fmt.Println(element.rows)
