@@ -120,6 +120,7 @@ func (element *Table) InsertColumn(column string, values []string, index int) er
 	// 向每一列插入数据
 	for i, _ := range element.rows {
 		element.rows[i][column] = CreateRow(values[i])
+		fmt.Println(i)
 	}
 
 	return nil
