@@ -34,6 +34,9 @@ func TestTable(t *testing.T) {
 	// 设置对齐方式
 	exampleTable.SetAlign(table.AlignCenter)
 
+	// 设置序列
+	exampleTable.EnableSequence()
+
 	// 打印表格
 	exampleTable.Print()
 }

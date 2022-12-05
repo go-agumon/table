@@ -118,8 +118,8 @@ func (element *Table) InsertColumn(column string, values []string, index int) er
 	}
 
 	// 向每一列插入数据
-	for i, item := range element.rows {
-		item[column] = CreateRow(values[i])
+	for i, _ := range element.rows {
+		element.rows[i][column] = CreateRow(values[i])
 	}
 
 	return nil
@@ -319,6 +319,8 @@ func (element *Table) Print() {
 		}
 		_ = element.InsertColumn("序列", values, 0)
 	}
+
+	fmt.Println(element.rows)
 
 	tableSlice := element.ToStringSlice()
 	for _, line := range tableSlice {
