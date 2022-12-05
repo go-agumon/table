@@ -114,6 +114,7 @@ func (element *Table) InsertColumn(column string, values []string, index int) er
 	}
 
 	// 需要保证值的长度与行的长度一致
+	fmt.Println(len(values), len(element.rows))
 	if len(values) != len(element.rows) {
 		return errors.New("the given values does not match the length of the rows")
 	}
@@ -320,7 +321,7 @@ func (element *Table) Print() {
 			values = append(values, strconv.Itoa(i))
 		}
 		if err := element.InsertColumn("序列", values, 0); err != nil {
-			fmt.Printf("unable to insert values to table, err: %v", err)
+			fmt.Printf("unable to insert values to table")
 			os.Exit(-1)
 		}
 	}
